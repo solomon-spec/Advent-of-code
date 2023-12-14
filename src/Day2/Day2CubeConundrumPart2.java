@@ -5,10 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
 import static java.lang.Math.max;
 
-public class Day2CubeCundrumPart2 {
+public class Day2CubeConundrumPart2 {
     public static void main(String[] args) {
 
 

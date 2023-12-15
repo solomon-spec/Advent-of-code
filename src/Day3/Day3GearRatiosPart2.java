@@ -1,37 +1,39 @@
 package Day3;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
-public class Day3GearRatios {
+public class Day3GearRatiosPart2 {
     public static int row_m;
     public static int col_m;
     public static boolean isValid(int x, int y){
         return (0 <= x && x < row_m && 0 <= y && y <= col_m);
     }
-
-    public static boolean dfs(ArrayList<String> matrix,int[][] vals,int i,int j) {
+    public static int[][] count ;
+    public static int[][] gearRatio;
+    public static void dfs(ArrayList<String> matrix, int[][] vals, int i, int j) {
         int num = vals[i][j]*100;
+        int it = j;
         j -= 1;
-        System.out.println(i + " " + j + " " + vals[i][j+1]);
+
         while(num > 0 && j < matrix.getFirst().length()){
             for (int x = i - 1;  x <= i+1; x++){
 
                 if(isValid(x,j)){
                     char a = matrix.get(x).charAt(j);
-                    if(a != '.' && !Character.isDigit(a)){
-                        return true;
+                    if(a == '*'){
+                       count[x][j]++;
+                       gearRatio[x][j] *= vals[i][it];
                     }
                 }
             }
             num /= 10;
             j++;
         }
-        return false;
+
     }
     public static void main(String[] args) {
         ArrayList<String> matrix = new ArrayList<>();
@@ -49,9 +51,14 @@ public class Day3GearRatios {
             int r = 0;
 
             int[][] vals = new int[matrix.size()][matrix.getFirst().length()];
+            count = new int[matrix.size()][matrix.getFirst().length()];
+            gearRatio = new int[matrix.size()][matrix.getFirst().length()];
             for(int i = 0; i < matrix.size(); i++){
                 for(int j = 0; j < matrix.getFirst().length(); j++){
+
                     vals[i][j] = 0;
+                    count[i][j] = 0;
+                    gearRatio[i][j] = 1;
                 }
             }
 
@@ -76,14 +83,19 @@ public class Day3GearRatios {
             long ans = 0;
             for(int i = 0; i < matrix.size(); i++){
                 for(int j = 0; j < matrix.getFirst().length(); j++){
+
                     if(vals[i][j] == 0)continue;
-
-                    if(dfs(matrix,vals,i,j)){
-                        ans += vals[i][j];
-                    }
-
+                    dfs(matrix,vals,i,j);
                 }
 
+            }
+
+            for(int i = 0; i < matrix.size(); i++){
+                for(int j = 0; j < matrix.getFirst().length(); j++) {
+
+                    if(count[i][j] == 2) ans += gearRatio[i][j];
+
+                }
             }
             System.out.println(ans);
         }
